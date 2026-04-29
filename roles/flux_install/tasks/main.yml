@@ -1,0 +1,17 @@
+---
+- name: Проверка наличия Flux
+  command: which flux
+  register: flux_check
+  failed_when: false
+  changed_when: false
+
+- name: Установка Flux CLI
+  shell: curl -s https://fluxcd.io/install.sh | sudo bash
+  args:
+    creates: /usr/local/bin/flux
+  when: flux_check.rc != 0
+
+- name: Проверка версии Flux
+  command: flux --version
+  register: flux_version
+  changed_when: false
