@@ -12,8 +12,6 @@
       - wget
       - ca-certificates
       - gnupg
-      - lsb-release
-      - software-properties-common
       - rsync
       - jq
       - yq
