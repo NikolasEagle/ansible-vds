@@ -9,3 +9,16 @@ github_branch: main
 flux_path: ./clusters/staging
 
 archive_name: vds-kz-data.tar.gz
+manifests_path: /kuber
+
+ufw_allowed_ports:
+  - { port: "22", proto: tcp, comment: SSH }
+  - { port: "80", proto: tcp, comment: HTTP }
+  - { port: "443", proto: tcp, comment: HTTPS }
+  - { port: "25", proto: tcp, comment: SMTP }
+  - { port: "465", proto: tcp, comment: SMTPS }
+  - { port: "993", proto: tcp, comment: IMAPS }
+  - { port: "995", proto: tcp, comment: POP3S }
+  - { port: "53709", proto: tcp, comment: VLESS }
+  - { port: "53710", proto: tcp, comment: HTTP-PROXY }
+  - { port: "5001", proto: tcp, comment: IPERF3 }
