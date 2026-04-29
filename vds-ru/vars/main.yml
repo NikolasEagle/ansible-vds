@@ -1,0 +1,9 @@
+admin_user: albinoni
+admin_user_home: /home/albinoni
+
+github_owner: NikolasEagle
+github_repository: fluxcd_vds_ru_test
+github_branch: main
+flux_path: ./clusters/staging
+
+archive_name: vds-ru-data.tar.gz
