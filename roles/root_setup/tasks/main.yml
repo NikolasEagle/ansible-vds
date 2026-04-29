@@ -1,0 +1,17 @@
+---
+- name: Создание .ssh директории для root
+  file:
+    path: "/root/.ssh"
+    state: directory
+    owner: "root"
+    group: "root"
+    mode: "0700"
+
+- name: Добавление SSH ключа для root
+  copy:
+    src: authorized_keys
+    dest: "/root/.ssh/authorized_keys"
+    owner: "root"
+    group: "root"
+    mode: "0600"
+  when: lookup('file', '{{ type_server }}/files/authorized_keys_root', errors='ignore') is defined
