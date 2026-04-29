@@ -1,0 +1,17 @@
+---
+- name: Проверка наличия Helm
+  command: which helm
+  register: helm_check
+  failed_when: false
+  changed_when: false
+
+- name: Установка Helm
+  shell: curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+  args:
+    creates: /usr/local/bin/helm
+  when: helm_check.rc != 0
+
+- name: Проверка версии Helm
+  command: helm version
+  register: helm_version
+  changed_when: false
