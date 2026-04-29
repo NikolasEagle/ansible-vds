@@ -1,0 +1,28 @@
+---
+- name: Проверка наличия K3s
+  command: which k3s
+  register: k3s_check
+  failed_when: false
+  changed_when: false
+
+- name: Установка K3s
+  shell: |
+    curl -sfL https://get.k3s.io | sh -
+  args:
+    creates: /usr/local/bin/k3s
+  when: k3s_check.rc != 0
+
+- name: Запуск и включение K3s
+  systemd:
+    name: k3s
+    state: started
+    enabled: yes
+    daemon_reload: yes
+
+- name: Ожидание готовности K3s
+  command: systemctl is-active k3s
+  register: k3s_status
+  until: k3s_status.stdout == "active"
+  retries: 30
+  delay: 5
+  changed_when: false
