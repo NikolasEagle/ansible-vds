@@ -1,0 +1,34 @@
+---
+- name: Проверка наличия swap
+  command: swapon --show
+  register: swap_check
+  changed_when: false
+
+- name: Создание swap файла
+  command: "fallocate -l {{ swap_size_mb }}M /swapfile"
+  args:
+    creates: /swapfile
+  when: swap_check.stdout == ""
+
+- name: Установка прав на swap
+  file:
+    path: /swapfile
+    mode: '0600'
+
+- name: Инициализация swap
+  command: mkswap /swapfile
+  when: swap_check.stdout == ""
+
+- name: Активация swap
+  command: swapon /swapfile
+  when: swap_check.stdout == ""
+
+- name: Добавление в fstab
+  mount:
+    path: none
+    src: /swapfile
+    fstype: swap
+    opts: sw
+    dump: 0
+    passno: 0
+    state: present
