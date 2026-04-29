@@ -45,17 +45,21 @@
       tags: [ ufw ]
 
   post_tasks:
+    - name: Сбор информации о сервисах
+      service_facts:
+      register: services_info
+
     - name: Вывод информации о завершении
       debug:
         msg:
           - "========================================="
           - "✅ УСТАНОВКА УСПЕШНО ЗАВЕРШЕНА"
           - "========================================="
-          - "📊 Статус K3s: {{ ansible_facts.services['k3s'].state }}"
-          - "👤 Пользователь: {{ admin_user }}"
-          - "🔧 Для управления кластером:"
+          - "   Статус K3s: {{ services_info.ansible_facts.services['k3s.service'].state | default('unknown') }}"
+          - "   Пользователь: {{ admin_user | default('vivaldi') }}"
+          - "========================================="
+          - "   Для управления кластером:"
           - "   ssh {{ admin_user }}@{{ ansible_host }}"
           - "   kubectl get nodes"
           - "   k9s"
           - "========================================="
-      run_once: true
