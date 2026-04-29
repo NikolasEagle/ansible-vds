@@ -1,0 +1,33 @@
+---
+- name: Создание пользователя {{ admin_user }}
+  user:
+    name: "{{ admin_user }}"
+    shell: /bin/bash
+    groups: sudo
+    append: yes
+    create_home: yes
+    state: present
+
+- name: Настройка sudo без пароля
+  template:
+    src: sudoers.j2
+    dest: "/etc/sudoers.d/{{ admin_user }}"
+    mode: "0440"
+    validate: "visudo -cf %s"
+
+- name: Создание .ssh директории для {{ admin_user }}
+  file:
+    path: "{{ admin_user_home }}/.ssh"
+    state: directory
+    owner: "{{ admin_user }}"
+    group: "{{ admin_user }}"
+    mode: "0700"
+
+- name: Добавление SSH ключа для {{ admin_user }}
+  copy:
+    src: authorized_keys
+    dest: "{{ admin_user_home }}/.ssh/authorized_keys"
+    owner: "{{ admin_user }}"
+    group: "{{ admin_user }}"
+    mode: "0600"
+  when: lookup('file', '{{ type_server }}/files/authorized_keys', errors='ignore') is defined
