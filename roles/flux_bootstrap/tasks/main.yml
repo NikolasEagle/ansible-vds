@@ -1,0 +1,34 @@
+---
+- name: Проверка наличия секрета с GitHub токеном
+  command: kubectl get secret fluxcd-secret -o json
+  become_user: "{{ admin_user }}"
+  register: flux_secret
+  failed_when: false
+
+- name: Извлечение GitHub токена
+  set_fact:
+    github_token: "{{ (flux_secret.stdout | from_json).data.GITHUB_TOKEN | b64decode }}"
+  when: flux_secret.stdout != ""
+
+- name: Bootstrap FluxCD
+  shell: |
+    flux bootstrap github \
+      --owner={{ github_owner }} \
+      --repository={{ github_repository }} \
+      --branch={{ github_branch }} \
+      --path={{ flux_path }} \
+      --personal \
+      --private=false \
+      --token-auth
+  become_user: "{{ admin_user }}"
+  environment:
+    GITHUB_TOKEN: "{{ github_token }}"
+  when: 
+    - flux_secret.stdout != ""
+    - github_token is defined
+  register: flux_bootstrap_result
+
+- name: Вывод результата bootstrap
+  debug:
+    msg: "FluxCD успешно настроен"
+  when: flux_bootstrap_result is defined
