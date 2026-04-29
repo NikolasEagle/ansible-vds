@@ -1,6 +1,8 @@
 admin_user: vivaldi
 admin_user_home: /home/vivaldi
 
+type_server: vds-kz
+
 swap_size_mb: 4096
 
 github_owner: NikolasEagle

@@ -1,6 +1,8 @@
 admin_user: albinoni
 admin_user_home: /home/albinoni
 
+type_server: vds-ru
+
 github_owner: NikolasEagle
 github_repository: fluxcd_vds_ru_test
 github_branch: main
