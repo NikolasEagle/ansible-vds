@@ -1,0 +1,37 @@
+---
+- name: Проверка наличия архива бекапа с манифестами и данными
+  stat:
+    path: "{{ type_server }}/files/{{ archive_name }}"
+  register: archive_stat
+  delegate_to: localhost
+  run_once: true
+
+- name: Копирование архива на сервер
+  copy:
+    src: "{{ type_server }}/files/{{ archive_name }}"
+    dest: "/tmp/{{ archive_name }}"
+  when: archive_stat.stat.exists
+
+- name: Распаковка архива
+  unarchive:
+    src: "/tmp/{{ archive_name }}"
+    dest: /
+    remote_src: yes
+    extra_opts: [--strip-components=2]
+  when: archive_stat.stat.exists
+
+- name: Удаление архива
+  file:
+    path: "/tmp/{{ archive_name }}"
+    state: absent
+
+- name: Применение манифестов
+  command: kubectl apply -f "{{ manifests_path }}"
+  become_user: "{{ admin_user }}"
+  register: kubectl_apply
+  when: archive_stat.stat.exists and manifests_path is defined
+
+- name: Вывод результата применения манифестов
+  debug:
+    msg: "Применены манифесты из {{ manifests_path }}"
+  when: archive_stat.stat.exists
