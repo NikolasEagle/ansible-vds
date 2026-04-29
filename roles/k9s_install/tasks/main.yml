@@ -1,0 +1,22 @@
+---
+- name: Проверка наличия K9s
+  command: which k9s
+  register: k9s_check
+  failed_when: false
+  changed_when: false
+
+- name: Скачивание K9s пакета
+  get_url:
+    url: "https://github.com/derailed/k9s/releases/download/{{ k9s_version }}/k9s_linux_amd64.deb"
+    dest: "/tmp/k9s_{{ k9s_version }}.deb"
+  when: k9s_check.rc != 0
+
+- name: Установка K9s
+  apt:
+    deb: "/tmp/k9s_{{ k9s_version }}.deb"
+  when: k9s_check.rc != 0
+
+- name: Очистка временного файла
+  file:
+    path: "/tmp/k9s_{{ k9s_version }}.deb"
+    state: absent
