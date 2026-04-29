@@ -1,0 +1,33 @@
+---
+- name: Скачивание kubectl
+  get_url:
+    url: "https://dl.k8s.io/release/v1.36.0/bin/linux/amd64/kubectl"
+    dest: /usr/local/bin/kubectl
+    mode: "0755"
+    force: no
+
+- name: Создание .kube директории для пользователя
+  file:
+    path: "{{ admin_user_home }}/.kube"
+    state: directory
+    owner: "{{ admin_user }}"
+    group: "{{ admin_user }}"
+    mode: "0755"
+
+- name: Копирование k3s.yaml в .kube/config
+  copy:
+    src: /etc/rancher/k3s/k3s.yaml
+    dest: "{{ admin_user_home }}/.kube/config"
+    owner: "{{ admin_user }}"
+    group: "{{ admin_user }}"
+    mode: "0600"
+    remote_src: yes
+
+- name: Проверка kubectl
+  command: kubectl get nodes
+  become_user: "{{ admin_user }}"
+  register: kubectl_test
+  until: kubectl_test.rc == 0
+  retries: 10
+  delay: 5
+  changed_when: false
