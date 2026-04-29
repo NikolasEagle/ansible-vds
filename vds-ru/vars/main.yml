@@ -11,6 +11,10 @@ flux_path: ./clusters/staging
 archive_name: vds-ru-data.tar.gz
 manifests_path: /kuber
 
+kubectl_version: v1.36.0
+
+k9s_version: v0.50.18
+
 ufw_allowed_ports:
   - { port: "22", proto: tcp, comment: SSH }
   - { port: "80", proto: tcp, comment: HTTP }
