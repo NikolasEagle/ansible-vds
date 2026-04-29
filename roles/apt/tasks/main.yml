@@ -1,0 +1,24 @@
+---
+- name: Обновление apt кэша
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Установка пакетов
+  apt:
+    name:
+      - sudo
+      - curl
+      - wget
+      - ca-certificates
+      - gnupg
+      - lsb-release
+      - software-properties-common
+      - rsync
+      - jq
+      - yq
+      - iperf3
+      - htop
+      - net-tools
+      - dnsutils
+    state: present
