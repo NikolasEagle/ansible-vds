@@ -6,6 +6,18 @@
     mode: "0755"
     force: no
 
+- name: Ожидание готовности K3s API
+  wait_for:
+    port: 6443
+    host: "{{ ansible_host }}"
+    delay: 5
+    timeout: 120
+
+- name: Исправление прав на k3s.yaml
+  file:
+    path: /etc/rancher/k3s/k3s.yaml
+    mode: "0644"
+
 - name: Создание .kube директории для пользователя
   file:
     path: "{{ admin_user_home }}/.kube"
