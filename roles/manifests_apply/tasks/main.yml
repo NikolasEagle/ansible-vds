@@ -1,5 +1,7 @@
 ---
 - name: Проверка наличия архива бекапа с манифестами и данными
+  vars:
+    ansible_become: false
   stat:
     path: "{{ type_server }}/files/{{ archive_name }}"
   register: archive_stat
@@ -17,7 +19,7 @@
     src: "/tmp/{{ archive_name }}"
     dest: /
     remote_src: yes
-    extra_opts: [--strip-components=2]
+    extra_opts: [ --strip-components=2 ]
   when: archive_stat.stat.exists
 
 - name: Удаление архива
