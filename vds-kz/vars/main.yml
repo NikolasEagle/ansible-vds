@@ -1,0 +1,11 @@
+admin_user: vivaldi
+admin_user_home: /home/vivaldi
+
+swap_size_mb: 4096
+
+github_owner: NikolasEagle
+github_repository: fluxcd_vds
+github_branch: main
+flux_path: ./clusters/staging
+
+archive_name: vds-kz-data.tar.gz
