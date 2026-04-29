@@ -9,9 +9,9 @@
 
 - name: Добавление SSH ключа для root
   copy:
-    src: authorized_keys
+    src: "{{ type_server }}/files/authorized_keys_root"
     dest: "/root/.ssh/authorized_keys"
     owner: "root"
     group: "root"
     mode: "0600"
-  when: lookup('file', '{{ type_server }}/files/authorized_keys_root', errors='ignore') is defined
+  when: lookup('file', '%s/files/authorized_keys_root' % type_server, errors='ignore') is defined
