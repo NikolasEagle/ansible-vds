@@ -31,4 +31,3 @@
 - name: Отображение правил UFW
   debug:
     msg: "{{ ufw_status.stdout_lines }}"
-  when: verbose | default(false)
