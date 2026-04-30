@@ -4,7 +4,7 @@ admin_user_home: /home/albinoni
 type_server: vds-ru
 
 github_owner: NikolasEagle
-github_repository: fluxcd_vds_ru_test
+github_repository: fluxcd_vds_ru
 github_branch: main
 flux_path: ./clusters/staging
 
