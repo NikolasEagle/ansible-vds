@@ -5,10 +5,21 @@
   failed_when: false
   changed_when: false
 
+- name: Загрузка скрипта установки Flux CLI
+  get_url:
+    url: https://fluxcd.io/install.sh
+    dest: /tmp/install_flux.sh
+    mode: "0755"
+  hen: flux_check.rc != 0
+
 - name: Установка Flux CLI
-  shell: curl -s https://fluxcd.io/install.sh | sudo bash
-  args:
-    creates: /usr/local/bin/flux
+  shell: /tmp/install_flux.sh
+  when: flux_check.rc != 0
+
+- name: Удаление установочного скрипта Flux CLI
+  file:
+    path: /tmp/install_flux.sh
+    state: absent
   when: flux_check.rc != 0
 
 - name: Проверка версии Flux

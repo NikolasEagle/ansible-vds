@@ -5,11 +5,21 @@
   failed_when: false
   changed_when: false
 
+- name: Загрузка скрипта установки K3s
+  get_url:
+    url: https://get.k3s.io
+    dest: /tmp/install_k3s.sh
+    mode: "0755"
+  when: k3s_check.rc != 0
+
 - name: Установка K3s
-  shell: |
-    curl -sfL https://get.k3s.io | sh -
-  args:
-    creates: /usr/local/bin/k3s
+  shell: /tmp/install_k3s.sh
+  when: k3s_check.rc != 0
+
+- name: Удаление установочного скрипта K3s
+  file:
+    path: /tmp/install_k3s.sh
+    state: absent
   when: k3s_check.rc != 0
 
 - name: Запуск и включение K3s
